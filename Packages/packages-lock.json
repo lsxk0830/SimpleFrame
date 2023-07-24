@@ -1,0 +1,16 @@
+{
+    "name": "com.Blue.Freamework",
+    "displayName": "FrameworkDesign",
+    "version": "1.0.0",
+    "unity": "2021.8",
+    "description": "Hello World",
+    "keywords": [],
+    "dependencies": {},
+    "samples": [
+        {
+            "displayName": "Framework",
+            "description": "Basic sample, minimal project setup.",
+            "path": "Samples~/FrameworkDesign"
+        }
+    ]
+}
