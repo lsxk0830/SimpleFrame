@@ -1,0 +1,12 @@
+/[Ll]ibrary/
+/[Ll]ogs/
+/[Oo]bj/
+/[Tt]emp/
+/Assets/TextMesh Pro/
+/Assets/TextMesh Pro.meta
+
+/.vs
+/.vscode
+
+*.sln
+*.csproj
