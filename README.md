@@ -30,6 +30,19 @@ public class TestArchitecture : AbstractArchitecture<TestArchitecture>
 
 
 
+#### 项目设置【必看】
+
+项目分为四个层级，Controller层、Model层、Service层、Utility层
+Controller层为表现层，Model层+Service层为底层，Utility层为工具层。工具层全局都可以调用【默认实现了层级接口或层级之间沟通接口】。
+
+变现层【Controller层】与底层【Model层+Service层】之间的交互为：
+
+变现层--->底层:使用Command
+
+底层--->变现层:使用事件
+
+
+
 #### 必看规则
 
 ##### 层级接口
@@ -199,6 +212,8 @@ public interface ICanEvent
 
 #### Controller层
 
+`Controller层`能做的事取决于`IController`继承了哪些接口
+
 示例代码如下：
 
 ```c#
@@ -215,6 +230,8 @@ public class Test : MonoBehaviour, IController
 
 #### Model层
 
+`Model层`能做的事取决于`IModel`继承了哪些接口
+
 Model默认为数据层，即对数据进行处理。推荐用法如下
 
 1. 先定义**Model**类型接口，如**ITestModel**
@@ -227,6 +244,7 @@ Model默认为数据层，即对数据进行处理。推荐用法如下
 - 先定义**Model**类型接口，如**ITestModel**
 
 ```c#
+// 具体某一Model层接口
 public interface ITestModel : IModel
 {
     string GetID(string idStr);
@@ -236,6 +254,7 @@ public interface ITestModel : IModel
 - 再定义**TestModel**类型类，具体实现功能
 
 ```
+// 具体实现类
 public class TestModel : ITestModel
 {
     private float id;
@@ -248,7 +267,7 @@ public class TestModel : ITestModel
        // this.GetModel<TestModelPlanB>(); 不建议在Init中获取层级数据
     }
 
-    string ITestModel.GetID(string idStr)
+    string ITestModel.GetID(string idStr) // 推荐显示实现接口
     {
         mTestID = float.Parse(idStr);
 
@@ -267,7 +286,7 @@ public class TestArchitecture : AbstractArchitecture<TestArchitecture>
     protected override void OnInit()
     {
         RegisterModel<ITestModel>(new TestModel());
-        //RegisterModel<ITestModel>(new **TestModelPlanB**());
+        //RegisterModel<ITestModel>(new TestModelPlanB());
     }
 }
 ```
@@ -289,30 +308,102 @@ public class TestCommand : ICommand
 
 #### Service层
 
+Service层默认为服务层，如实现与服务器交互的代码可以放到这一层中实现。具体的服务实现。推荐用法同Model层。
 
+Model层与Service层的区别：
 
-```c#
-
-```
+- Service层：服务型脚本
+- Model层：数据型脚本
 
 
 
 #### Utility层
 
+Utility层为工具层，里面具体实现自己的工具代码。如对某一字符串进行特殊处理。推荐用法如下：
 
+- 如果项目开发架构统一，可以规范Utility层，所有工具统一从Utility层获取
+- 如果项目已经经过许多前辈开发，通用型工具由静态扩展实现，自己的特殊工具由Utility层获取
+
+示例代码如下：
 
 ```c#
+// 具体某一Utility层接口
+public interface ITestUtility : IUtility
+{
+    int TestGetStringLength(string str);
+}
+```
 
+```c#
+// 具体实现类
+public class TestUtility : ITestUtility
+{
+    int ITestUtility.TestGetStringLength(string str) // 推荐显示实现接口
+    {
+        return str.Length;
+    }
+}
+```
+
+```c#
+// 注册Utility层
+public class TestArchitecture : AbstractArchitecture<TestArchitecture>
+{
+    protected override void OnInit()
+    {
+        RegisterUtility();
+    }
+    void RegisterUtility()
+    {
+        RegisterUtility<ITestUtility>(new TestUtility());
+    }
+}
+```
+
+```c#
+// 调用
+public class TestCommand : ICommand
+{
+    public void Execute()
+    {
+        int length = this.GetModel<ITestUtility>().TestGetStringLength("Hello World");
+        Debug.Log($"字符串长度为 : {length}");
+    }
+}
 ```
 
 
 
 #### Command
 
+必须实现ICommand接口
+Execute方法为具体执行命令代码块，当调用SendCommand时会自动执行Execute方法。示例代码如下：
 
+Execute方法执行完时会自动放入对象池，下次使用时会从对象池中获取，不需要new。
+
+> 如果TestCommand中有一些字段，获取TestCommand对象后需要手动初始化
 
 ```c#
+// 定义 class、struct都可以
+public class TestCommand : ICommand
+{
+    public void Execute()
+    {
+        int length = this.GetModel<ITestUtility>().TestGetStringLength("Hello World");
+        Debug.Log($"字符串长度为 : {length}");
+    }
+}
+```
 
+```
+// 调用
+public class Test : MonoBehaviour, IController
+{
+    void Start()
+    {
+       this.SendCommand<TestCommand>();
+    }
+}
 ```
 
 
