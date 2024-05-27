@@ -14,7 +14,7 @@ public static class PoolExtension
     #region 放入对象
 
     /// <summary>
-    /// 对象放入结构体对象池
+    /// 对象放入对象池
     /// </summary>
     /// <param name="objFullName">放入对象池时对象对应的FullName</param>
     /// <param name="instance">对象实例</param>
@@ -24,7 +24,7 @@ public static class PoolExtension
     }
 
     /// <summary>
-    /// 对象放入结构体对象池
+    /// 对象放入对象池
     /// </summary>
     /// <param name="objFullName">放入对象池时对象对应的FullName</param>
     /// <param name="instance">对象实例</param>
@@ -37,7 +37,7 @@ public static class PoolExtension
     #region 获取对象
 
     /// <summary>
-    /// 获取结构体对象，没有则生成
+    /// 获取对象，没有则生成
     /// </summary>
     /// <typeparam name="T">指定类型对象</typeparam>
     /// <returns>指定类型对象</returns>

@@ -395,7 +395,7 @@ public class TestCommand : ICommand
 }
 ```
 
-```
+```c#
 // 调用
 public class Test : MonoBehaviour, IController
 {
