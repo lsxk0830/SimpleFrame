@@ -1,4 +1,4 @@
-public static class DebugLog
+public static partial class ToolExtension
 {
     public static void Log(string LogStr)
     {

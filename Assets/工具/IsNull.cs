@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class ToolExtension
+public static partial class ToolExtension
 {
     public static bool IsNull(this GameObject obj)
     {

@@ -1,5 +1,4 @@
 using System;
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using UnityEngine;
 
 /// <summary>
@@ -71,7 +70,7 @@ public static class PoolExtension
     /// </summary>
     /// <typeparam name="T">指定类型对象</typeparam>
     /// <returns>指定类型对象</returns>
-    public static T GetObjInstance<T>(this object obj, string objFullName, params object[] objList) where T : Class
+    public static T GetObjInstance<T>(this object obj, string objFullName, params object[] objList) where T : class
     {
         return ObjGlobal.GetObjInstance<T>(objFullName, objList);
     }
