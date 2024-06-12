@@ -418,21 +418,199 @@ public class Test : MonoBehaviour, IController
 
 
 
-#### Event
+#### Event使用示例
 
+##### 定义事件
 
+> 引用类型推荐用class
+>
+> 值类型推荐用struct
 
 ```c#
+public class TestClassEvent : IEvent
+{
+    public string Name;
+}
 
+public struct TestStructEvent : IEvent
+{
+    public int ID;
+}
+```
+
+##### 监听事件、触发事件
+
+```C#
+TestClassEvent = this.GetObjInstance<TestClassEvent>(); // 推荐从对象池中获取对象
+this.TriggerEvent<TestClassEvent>(); // 触发事件
+this.TriggerEvent(TestClassEvent); // 触发事件
+```
+
+```c#
+using UnityEngine;
+
+public class EventTest : AbstractController
+{
+    private TestClassEvent TestClassEvent;
+    private TestStructEvent TestStructEvent;
+
+    private void Start()
+    {
+        this.RegisterEvent<TestClassEvent>(TestClassEventListener); // 事件监听
+        this.RegisterEvent<TestStructEvent>(TestStructEventListener); // 事件监听
+    }
+    private void TestClassEventListener(TestClassEvent e)
+    {
+        Debug.Log($"Class事件:{e.Name}");
+    }
+    private void TestStructEventListener(TestStructEvent e)
+    {
+        Debug.Log($"Struct事件:{e.ID}");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            this.TriggerEvent<TestClassEvent>(); // 触发事件
+            this.TriggerEvent<TestStructEvent>(); // 触发事件
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            TestClassEvent = this.GetObjInstance<TestClassEvent>(); // 推荐从对象池中获取对象
+            TestClassEvent.Name = "W";
+
+            TestStructEvent = this.GetObjInstance<TestStructEvent>();
+            TestStructEvent.ID = 1;
+            this.TriggerEvent(TestClassEvent); // 触发事件
+            this.TriggerEvent(TestStructEvent); // 触发事件
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            TestClassEvent = this.GetObjInstance<TestClassEvent>();
+            TestClassEvent.Name = "E";
+
+            TestStructEvent = this.GetObjInstance<TestStructEvent>();
+            TestStructEvent.ID = 2;
+            this.TriggerEvent(TestClassEvent);
+            this.TriggerEvent(TestStructEvent);
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            this.TriggerEvent<TestClassEvent>(); // 触发事件
+            this.TriggerEvent<TestStructEvent>(); // 触发事件
+        }
+    }
+}
 ```
 
 
 
 #### 工具
 
-##### Pool
+##### Pool对象池示例
+
+> C#对象从对象池获取时，应该对其进行手动初始化，它的值可能为上个放入对象池的值
+>
+> 物体放入对象池的位置：DontDestroyOnLoad---PoolRoot
+
+```C#
+this.GetObjInstance<PoolClassTest>(); // 普通C#类从对象池中获取
+this.GetGameObject(prefab); // 物体从对象池中获取
+
+this.PushPool(mPoolClassTest); // C#对象放入对象池
+this.PushGameObject(mGoList.First()); // 物体放入对象池
+```
+
+```c#
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class PoolTest : MonoBehaviour
+{
+    public class PoolClassTest
+    {
+        public int ID = 999;
+    }
+
+    private GameObject prefab;
+    private PoolClassTest mPoolClassTest;
+    private List<GameObject> mGoList = new List<GameObject>();
+
+    private void Start()
+    {
+        prefab = new GameObject("Prefab");
+        prefab.name = prefab.GetInstanceID().ToString();
+        mGoList.Add(prefab);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            mPoolClassTest = this.GetObjInstance<PoolClassTest>(); // 从对象池中获取
+            Debug.Log($"获取普通C#类_并打印:{mPoolClassTest.ID}");
+            mPoolClassTest.ID = 666;
+
+            GameObject go = this.GetGameObject(prefab); // 从对象池中获取
+            mGoList.Add(go);
+            go.name = go.GetInstanceID().ToString();
+            Debug.Log($"获取MonoID_并打印:{go.GetInstanceID()}");
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            this.PushPool(mPoolClassTest); // 放入对象池
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            mPoolClassTest = this.GetObjInstance<PoolClassTest>(); // 从对象池中获取
+            // 打印值：666,上一个对象的值，所以从对象池中获取到数据后应该对其初始化
+            Debug.Log($"获取普通C#类_并打印:{mPoolClassTest.ID}"); 
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            this.PushGameObject(mGoList.First());  // 放入对象池
+            mGoList.RemoveAt(0);
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            GameObject go = this.GetGameObject(prefab); // 从对象池中获取,prefab为关闭状态则获取到的对象为关闭状态
+            mGoList.Add(go);
+            go.name = go.GetInstanceID().ToString();
+            Debug.Log($"获取MonoID_并打印:{go.GetInstanceID()}");
+        }
+    }
+}
+```
 
 
+
+##### Singleton
+
+```
+
+```
+
+
+
+##### MonoSingleton
+
+```
+
+```
+
+
+
+##### Debug
+
+```
+
+```
+
+
+
+##### IsNull
 
 ```c#
 
@@ -440,5 +618,60 @@ public class Test : MonoBehaviour, IController
 
 
 
-##### Bindpro
+##### BindableProperty使用示例
+
+```c#
+using UnityEngine;
+
+public class BindablePropertyTest : MonoBehaviour
+{
+    private BindableProperty<int> bindablePropertyInt = new BindableProperty<int>();
+    private BindableProperty<string> bindablePropertyStr;
+    
+    void Start()
+    {
+        bindablePropertyInt.mOnValueChanged = newInt =>
+        {
+            Debug.Log($"新的值：{newInt}");
+        };
+        bindablePropertyStr = new BindableProperty<string>("InitStr")
+        {
+            mOnValueChanged = newStr =>
+            {
+                Debug.Log($"新的字符串：{newStr}");
+            }
+        };
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            bindablePropertyInt.Value = 1;
+            bindablePropertyStr.Value = "Q";
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            bindablePropertyInt.Value = 2;
+            bindablePropertyStr.Value = "W";
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            bindablePropertyInt.Value = 3;
+            bindablePropertyStr.Value = "E";
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            bindablePropertyInt.Value = 4;
+            bindablePropertyStr.Value = "R";
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            bindablePropertyInt.Value = 5;
+            bindablePropertyStr.Value = "T";
+        }
+    }
+}
+
+```
 

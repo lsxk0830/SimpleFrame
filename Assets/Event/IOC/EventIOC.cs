@@ -34,4 +34,13 @@ public class EventIOC
             (EventDic[type] as CustomEvent<T>).InvokeEvent(onEvent);
         }
     }
+
+    public void InvokeEvent<T>() where T : IEvent, new()
+    {
+        Type type = typeof(T);
+        if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+        {
+            (EventDic[type] as CustomEvent<T>).InvokeEvent(this.GetObjInstance<T>());
+        }
+    }
 }

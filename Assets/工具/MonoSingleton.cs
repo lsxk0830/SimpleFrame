@@ -1,17 +1,19 @@
-using UnityEngine;
-
-public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+public class MonoSingleton<T> : AbstractController where T : MonoSingleton<T>
 {
-    protected static T instance;
+    private static T instance;
+    public static T Instance => instance;
 
-    public static T Instance
+    protected virtual void OnAwake() { }
+
+    private void Awake()
     {
-        get
+        if (instance == null)
         {
-            if (instance == null)
-                instance = FindObjectOfType<T>();
-
-            return instance;
+            instance = this.GetComponent<T>();
+            instance.OnAwake();
+            DontDestroyOnLoad(instance);
         }
+        else
+            Destroy(gameObject);
     }
 }

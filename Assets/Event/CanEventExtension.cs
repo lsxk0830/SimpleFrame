@@ -14,8 +14,13 @@ public static class CanEventExtension
         Global.UnRegisterEvent<T>(onEvent);
     }
 
-    public static void TriggerEvent<T>(this ICanEvent self, T onEvent) where T : IEvent
+    public static void TriggerEvent<T>(this ICanEvent self, T instance) where T : IEvent
     {
-        Global.InvokeEvent<T>(onEvent);
+        Global.InvokeEvent<T>(instance);
+    }
+
+    public static void TriggerEvent<T>(this ICanEvent self) where T : IEvent, new()
+    {
+        Global.InvokeEvent<T>();
     }
 }
