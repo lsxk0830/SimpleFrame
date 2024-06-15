@@ -1,16 +1,19 @@
-public class Singleton<T> where T : class, new()
+namespace SimpleFrame
 {
-    private Singleton() { }
-
-    private static T instance;
-
-    public static T Instance
+    public class Singleton<T> where T : class, new()
     {
-        get
+        private Singleton() { }
+
+        private static T instance;
+
+        public static T Instance
         {
-            if (instance == null)
-                instance = new T();
-            return instance;
+            get
+            {
+                if (instance == null)
+                    instance = new T();
+                return instance;
+            }
         }
     }
 }

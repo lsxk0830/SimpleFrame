@@ -1,7 +1,12 @@
-public class TestQuery : IQuery<int>
+using SimpleFrame;
+
+namespace SimpleFrameTest
 {
-    public int Query()
+    public class TestQuery : IQuery<int>
     {
-        return 1;
+        public int Query()
+        {
+            return 1;
+        }
     }
 }

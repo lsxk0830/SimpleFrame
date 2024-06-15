@@ -1,3 +1,6 @@
-public interface ICustomEvent
+namespace SimpleFrame
 {
+    public interface ICustomEvent
+    {
+    }
 }

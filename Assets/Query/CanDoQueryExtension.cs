@@ -1,16 +1,19 @@
-public static class CanDoQueryExtension
+namespace SimpleFrame
 {
-    public static Result DoQuery<TQuery, Result>(this ICanQuery self) where TQuery : IQuery<Result>, new()
+    public static class CanDoQueryExtension
     {
-        return mArchitecture.DoQuery<TQuery, Result>();
+        public static Result DoQuery<TQuery, Result>(this ICanQuery self) where TQuery : IQuery<Result>, new()
+        {
+            return mArchitecture.DoQuery<TQuery, Result>();
+        }
+
+        public static Result DoQuery<TQuery, Result>(this ICanQuery self, IQuery<Result> query) where TQuery : IQuery<Result>, new()
+        {
+            return mArchitecture.DoQuery<TQuery, Result>(query);
+        }
+
+        private static IArchitecture mArchitecture;
+
+        public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
     }
-
-    public static Result DoQuery<TQuery, Result>(this ICanQuery self, IQuery<Result> query) where TQuery : IQuery<Result>, new()
-    {
-        return mArchitecture.DoQuery<TQuery, Result>(query);
-    }
-
-    private static IArchitecture mArchitecture;
-
-    public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
 }

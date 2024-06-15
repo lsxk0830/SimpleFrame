@@ -1,9 +1,14 @@
-public class TestClassEvent : IEvent
-{
-    public string Name;
-}
+using SimpleFrame;
 
-public struct TestStructEvent : IEvent
+namespace SimpleFrameTest
 {
-    public int ID;
+    public class TestClassEvent : IEvent
+    {
+        public string Name;
+    }
+
+    public struct TestStructEvent : IEvent
+    {
+        public int ID;
+    }
 }

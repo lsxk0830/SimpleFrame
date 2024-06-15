@@ -1,22 +1,24 @@
 using System;
 
-public class CustomEvent<T> : ICustomEvent where T : IEvent
+namespace SimpleFrame
 {
-    private Action<T> mOnEvent = (e) => { };
-
-    public void RegisterEvent(Action<T> onEvent)
+    public class CustomEvent<T> : ICustomEvent where T : IEvent
     {
-        mOnEvent += onEvent;
-    }
+        private Action<T> mOnEvent = (e) => { };
 
-    public void UnRegisterEvent(Action<T> onEvent)
-    {
-        mOnEvent = onEvent;
-    }
+        public void RegisterEvent(Action<T> onEvent)
+        {
+            mOnEvent += onEvent;
+        }
 
-    public void InvokeEvent(T onEvent)
-    {
-        mOnEvent?.Invoke(onEvent);
+        public void UnRegisterEvent(Action<T> onEvent)
+        {
+            mOnEvent = onEvent;
+        }
+
+        public void InvokeEvent(T onEvent)
+        {
+            mOnEvent?.Invoke(onEvent);
+        }
     }
 }
-

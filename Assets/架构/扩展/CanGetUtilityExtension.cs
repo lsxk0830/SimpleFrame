@@ -1,11 +1,14 @@
-public static class CanGetUtilityExtension
+namespace SimpleFrame
 {
-    public static TUtility GetUtility<TUtility>(this ICanGetModel self) where TUtility : IUtility
+    public static class CanGetUtilityExtension
     {
-        return mArchitecture.GetUtility<TUtility>();
+        public static TUtility GetUtility<TUtility>(this ICanGetModel self) where TUtility : IUtility
+        {
+            return mArchitecture.GetUtility<TUtility>();
+        }
+
+        private static IArchitecture mArchitecture;
+
+        public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
     }
-
-    private static IArchitecture mArchitecture;
-
-    public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
 }

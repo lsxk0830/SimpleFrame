@@ -1,11 +1,14 @@
-public static class CanGetServiceExtension
+namespace SimpleFrame
 {
-    public static TService GetService<TService>(this ICanGetService self) where TService : IService
+    public static class CanGetServiceExtension
     {
-        return mArchitecture.GetService<TService>();
+        public static TService GetService<TService>(this ICanGetService self) where TService : IService
+        {
+            return mArchitecture.GetService<TService>();
+        }
+
+        private static IArchitecture mArchitecture;
+
+        public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
     }
-
-    private static IArchitecture mArchitecture;
-
-    public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
 }

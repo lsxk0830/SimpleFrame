@@ -1,23 +1,26 @@
-public static partial class ToolExtension
+namespace SimpleFrame
 {
-    public static void Log(string LogStr)
+    public static partial class ToolExtension
     {
+        public static void Log(string LogStr)
+        {
 #if UNITY_EDITOR
-        UnityEngine.Debug.Log(LogStr);
+            UnityEngine.Debug.Log(LogStr);
 #endif
-    }
+        }
 
-    public static void Warning(string LogStr)
-    {
+        public static void Warning(string LogStr)
+        {
 #if UNITY_EDITOR
-        UnityEngine.Debug.LogWarning(LogStr);
+            UnityEngine.Debug.LogWarning(LogStr);
 #endif
-    }
+        }
 
-    public static void Error(string LogStr)
-    {
+        public static void Error(string LogStr)
+        {
 #if UNITY_EDITOR
-        UnityEngine.Debug.LogError(LogStr);
+            UnityEngine.Debug.LogError(LogStr);
 #endif
+        }
     }
 }

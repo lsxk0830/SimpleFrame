@@ -1,46 +1,49 @@
 using System;
 using System.Collections.Generic;
 
-public class EventIOC
+namespace SimpleFrame
 {
-    private Dictionary<Type, ICustomEvent> EventDic = new Dictionary<Type, ICustomEvent>();
-    public void RegisterEvent<T>(Action<T> onEvent) where T : IEvent
+    public class EventIOC
     {
-        Type type = typeof(T);
-        if (!EventDic.ContainsKey(type))
+        private Dictionary<Type, ICustomEvent> EventDic = new Dictionary<Type, ICustomEvent>();
+        public void RegisterEvent<T>(Action<T> onEvent) where T : IEvent
         {
-            CustomEvent<T> easy = this.GetObjInstance<CustomEvent<T>>();
-            EventDic[type] = easy;
-            easy.RegisterEvent(onEvent);
+            Type type = typeof(T);
+            if (!EventDic.ContainsKey(type))
+            {
+                CustomEvent<T> easy = this.GetObjInstance<CustomEvent<T>>();
+                EventDic[type] = easy;
+                easy.RegisterEvent(onEvent);
+            }
+            else
+                (EventDic[type] as CustomEvent<T>).RegisterEvent(onEvent);
         }
-        else
-            (EventDic[type] as CustomEvent<T>).RegisterEvent(onEvent);
-    }
 
-    public void UnRegisterEvent<T>(Action<T> onEvent) where T : IEvent
-    {
-        Type type = typeof(T);
-        if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+        public void UnRegisterEvent<T>(Action<T> onEvent) where T : IEvent
         {
-            (EventDic[type] as CustomEvent<T>).UnRegisterEvent(onEvent);
+            Type type = typeof(T);
+            if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+            {
+                (EventDic[type] as CustomEvent<T>).UnRegisterEvent(onEvent);
+            }
         }
-    }
 
-    public void InvokeEvent<T>(T onEvent) where T : IEvent
-    {
-        Type type = typeof(T);
-        if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+        public void InvokeEvent<T>(T onEvent) where T : IEvent
         {
-            (EventDic[type] as CustomEvent<T>).InvokeEvent(onEvent);
+            Type type = typeof(T);
+            if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+            {
+                (EventDic[type] as CustomEvent<T>).InvokeEvent(onEvent);
+            }
         }
-    }
 
-    public void InvokeEvent<T>() where T : IEvent, new()
-    {
-        Type type = typeof(T);
-        if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+        public void InvokeEvent<T>() where T : IEvent, new()
         {
-            (EventDic[type] as CustomEvent<T>).InvokeEvent(this.GetObjInstance<T>());
+            Type type = typeof(T);
+            if (EventDic.TryGetValue(type, out ICustomEvent customEvent))
+            {
+                (EventDic[type] as CustomEvent<T>).InvokeEvent(this.GetObjInstance<T>());
+            }
         }
     }
 }

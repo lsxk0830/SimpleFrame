@@ -1,4 +1,9 @@
-public interface ITestModel : IModel
+using SimpleFrame;
+
+namespace SimpleFrameTest
 {
-    string GetID(string idStr);
+    public interface ITestModel : IModel
+    {
+        string GetID(string idStr);
+    }
 }

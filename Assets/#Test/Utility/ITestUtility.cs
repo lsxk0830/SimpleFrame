@@ -1,4 +1,9 @@
-public interface ITestUtility : IUtility
+using SimpleFrame;
+
+namespace SimpleFrameTest
 {
-    int TestGetStringLength(string str);
+    public interface ITestUtility : IUtility
+    {
+        int TestGetStringLength(string str);
+    }
 }

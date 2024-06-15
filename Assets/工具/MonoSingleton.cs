@@ -1,19 +1,22 @@
-public class MonoSingleton<T> : AbstractController where T : MonoSingleton<T>
+namespace SimpleFrame
 {
-    private static T instance;
-    public static T Instance => instance;
-
-    protected virtual void OnAwake() { }
-
-    private void Awake()
+    public class MonoSingleton<T> : AbstractController where T : MonoSingleton<T>
     {
-        if (instance == null)
+        private static T instance;
+        public static T Instance => instance;
+
+        protected virtual void OnAwake() { }
+
+        private void Awake()
         {
-            instance = this.GetComponent<T>();
-            instance.OnAwake();
-            DontDestroyOnLoad(instance);
+            if (instance == null)
+            {
+                instance = this.GetComponent<T>();
+                instance.OnAwake();
+                DontDestroyOnLoad(instance);
+            }
+            else
+                Destroy(gameObject);
         }
-        else
-            Destroy(gameObject);
     }
 }

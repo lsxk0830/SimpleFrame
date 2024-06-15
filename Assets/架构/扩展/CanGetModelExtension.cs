@@ -1,11 +1,14 @@
-public static class CanGetModelExtension
+namespace SimpleFrame
 {
-    public static TModel GetModel<TModel>(this ICanGetModel self) where TModel : IModel
+    public static class CanGetModelExtension
     {
-        return mArchitecture.GetModel<TModel>();
+        public static TModel GetModel<TModel>(this ICanGetModel self) where TModel : IModel
+        {
+            return mArchitecture.GetModel<TModel>();
+        }
+
+        private static IArchitecture mArchitecture;
+
+        public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
     }
-
-    private static IArchitecture mArchitecture;
-
-    public static void SetArchitecture(IArchitecture architecture) => mArchitecture = architecture;
 }

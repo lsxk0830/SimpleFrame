@@ -1,7 +1,9 @@
 using UnityEngine;
 
-
-public class AbstractController : MonoBehaviour, IController
+namespace SimpleFrame
 {
+    public class AbstractController : MonoBehaviour, IController
+    {
 
+    }
 }

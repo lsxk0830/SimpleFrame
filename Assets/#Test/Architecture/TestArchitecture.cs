@@ -1,23 +1,28 @@
-public class TestArchitecture : AbstractArchitecture<TestArchitecture>
+using SimpleFrame;
+
+namespace SimpleFrameTest
 {
-    protected override void OnInit()
+    public class TestArchitecture : AbstractArchitecture<TestArchitecture>
     {
-        RegisterModel();
-        RegisterService();
-        RegisterUtility();
-    }
+        protected override void OnInit()
+        {
+            RegisterModel();
+            RegisterService();
+            RegisterUtility();
+        }
 
-    void RegisterModel()
-    {
-        RegisterModel<ITestModel>(new TestModel());
-    }
+        void RegisterModel()
+        {
+            RegisterModel<ITestModel>(new TestModel());
+        }
 
-    void RegisterService()
-    {
-        RegisterService<ITestService>(new TestService());
-    }
-    void RegisterUtility()
-    {
-        RegisterUtility<ITestUtility>(new TestUtility());
+        void RegisterService()
+        {
+            RegisterService<ITestService>(new TestService());
+        }
+        void RegisterUtility()
+        {
+            RegisterUtility<ITestUtility>(new TestUtility());
+        }
     }
 }

@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public static partial class ToolExtension
+namespace SimpleFrame
 {
-    public static bool IsNull(this GameObject obj)
+    public static partial class ToolExtension
     {
-        return ReferenceEquals(obj, null);
-    }
+        public static bool IsNull(this GameObject obj)
+        {
+            return ReferenceEquals(obj, null);
+        }
 
-    public static bool InstanceIsNull(this object obj)
-    {
-        return ReferenceEquals(obj, null);
+        public static bool InstanceIsNull(this object obj)
+        {
+            return ReferenceEquals(obj, null);
+        }
     }
 }

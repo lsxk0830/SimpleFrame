@@ -1,12 +1,16 @@
+using SimpleFrame;
 using UnityEngine;
 
-public class Test : MonoBehaviour, IController
+namespace SimpleFrameTest
 {
-    void Start()
+    public class Test : MonoBehaviour, IController
     {
-       this.SendCommand<TestCommand>();
-       this.SendCommand<TestCommand>();
-       this.SendCommand<TestCommand>();
-       this.SendCommand<TestCommand>();
+        void Start()
+        {
+            this.SendCommand<TestCommand>();
+            this.SendCommand<TestCommand>();
+            this.SendCommand<TestCommand>();
+            this.SendCommand<TestCommand>();
+        }
     }
 }

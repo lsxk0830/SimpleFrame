@@ -1,83 +1,86 @@
 using System.Collections.Generic;
 
-public abstract class AbstractArchitecture<T> : IArchitecture where T : AbstractArchitecture<T>, new()
+namespace SimpleFrame
 {
-    private ArchitectureIOC mIOCContainer = new ArchitectureIOC();
-    private HashSet<IService> mServiceList = new HashSet<IService>();
-    private HashSet<IModel> mModelList = new HashSet<IModel>();
-    public void Init()
+    public abstract class AbstractArchitecture<T> : IArchitecture where T : AbstractArchitecture<T>, new()
     {
-        CanGetModelExtension.SetArchitecture(this);
-        CanGetServiceExtension.SetArchitecture(this);
-        CanGetUtilityExtension.SetArchitecture(this);
-        CanSendCommandExtension.SetArchitecture(this);
-        CanDoQueryExtension.SetArchitecture(this);
-
-        OnInit();
-
-        foreach (var model in mModelList)
+        private ArchitectureIOC mIOCContainer = new ArchitectureIOC();
+        private HashSet<IService> mServiceList = new HashSet<IService>();
+        private HashSet<IModel> mModelList = new HashSet<IModel>();
+        public void Init()
         {
-            model.Init();
+            CanGetModelExtension.SetArchitecture(this);
+            CanGetServiceExtension.SetArchitecture(this);
+            CanGetUtilityExtension.SetArchitecture(this);
+            CanSendCommandExtension.SetArchitecture(this);
+            CanDoQueryExtension.SetArchitecture(this);
+
+            OnInit();
+
+            foreach (var model in mModelList)
+            {
+                model.Init();
+            }
+            foreach (var service in mServiceList)
+            {
+                service.Init();
+            }
         }
-        foreach (var service in mServiceList)
+
+        protected abstract void OnInit();
+
+        public void RegisterModel<TModel>(TModel instance) where TModel : IModel
         {
-            service.Init();
+            mModelList.Add(instance);
+            mIOCContainer.Push<TModel>(instance);
         }
-    }
 
-    protected abstract void OnInit();
+        public void RegisterService<TService>(TService instance) where TService : IService
+        {
+            mServiceList.Add(instance);
+            mIOCContainer.Push<TService>(instance);
+        }
 
-    public void RegisterModel<TModel>(TModel instance) where TModel : IModel
-    {
-        mModelList.Add(instance);
-        mIOCContainer.Push<TModel>(instance);
-    }
+        public void RegisterUtility<TUtility>(TUtility instance) where TUtility : IUtility
+        {
+            mIOCContainer.Push<TUtility>(instance);
+        }
 
-    public void RegisterService<TService>(TService instance) where TService : IService
-    {
-        mServiceList.Add(instance);
-        mIOCContainer.Push<TService>(instance);
-    }
+        public TModel GetModel<TModel>() where TModel : IModel
+        {
+            return mIOCContainer.Pull<TModel>();
+        }
 
-    public void RegisterUtility<TUtility>(TUtility instance) where TUtility : IUtility
-    {
-        mIOCContainer.Push<TUtility>(instance);
-    }
+        public TService GetService<TService>() where TService : IService
+        {
+            return mIOCContainer.Pull<TService>();
+        }
 
-    public TModel GetModel<TModel>() where TModel : IModel
-    {
-        return mIOCContainer.Pull<TModel>();
-    }
+        public TUtility GetUtility<TUtility>() where TUtility : IUtility
+        {
+            return mIOCContainer.Pull<TUtility>();
+        }
 
-    public TService GetService<TService>() where TService : IService
-    {
-        return mIOCContainer.Pull<TService>();
-    }
+        public void SendCommand<TCommand>() where TCommand : ICommand, new()
+        {
+            SendCommand<TCommand>(this.GetObjInstance<TCommand>());
+        }
 
-    public TUtility GetUtility<TUtility>() where TUtility : IUtility
-    {
-        return mIOCContainer.Pull<TUtility>();
-    }
+        public void SendCommand<TCommand>(TCommand command) where TCommand : ICommand
+        {
+            command.Execute();
+            this.PushPool(command);
+        }
 
-    public void SendCommand<TCommand>() where TCommand : ICommand, new()
-    {
-        SendCommand<TCommand>(this.GetObjInstance<TCommand>());
-    }
-
-    public void SendCommand<TCommand>(TCommand command) where TCommand : ICommand
-    {
-        command.Execute();
-        this.PushPool(command);
-    }
-
-    public Result DoQuery<TQuery, Result>() where TQuery : IQuery<Result>, new()
-    {
-        return DoQuery<TQuery, Result>(this.GetObjInstance<TQuery>());
-    }
-    public Result DoQuery<TQuery, Result>(IQuery<Result> query) where TQuery : IQuery<Result>
-    {
-        Result result = query.Query();
-        this.PushPool(query);
-        return result;
+        public Result DoQuery<TQuery, Result>() where TQuery : IQuery<Result>, new()
+        {
+            return DoQuery<TQuery, Result>(this.GetObjInstance<TQuery>());
+        }
+        public Result DoQuery<TQuery, Result>(IQuery<Result> query) where TQuery : IQuery<Result>
+        {
+            Result result = query.Query();
+            this.PushPool(query);
+            return result;
+        }
     }
 }

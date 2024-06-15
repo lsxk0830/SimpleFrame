@@ -1,7 +1,10 @@
-public class TestUtility : ITestUtility
+namespace SimpleFrameTest
 {
-    int ITestUtility.TestGetStringLength(string str)
+    public class TestUtility : ITestUtility
     {
-        return str.Length;
+        int ITestUtility.TestGetStringLength(string str)
+        {
+            return str.Length;
+        }
     }
 }
