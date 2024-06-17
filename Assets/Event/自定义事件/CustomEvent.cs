@@ -13,7 +13,7 @@ namespace SimpleFrame
 
         public void UnRegisterEvent(Action<T> onEvent)
         {
-            mOnEvent = onEvent;
+            mOnEvent -= onEvent;
         }
 
         public void InvokeEvent(T onEvent)
