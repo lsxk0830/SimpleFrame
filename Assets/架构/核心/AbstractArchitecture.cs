@@ -29,60 +29,54 @@ namespace SimpleFrame
 
         protected abstract void OnInit();
 
-        void IArchitecture.RegisterModel<TModel>(TModel instance)
+        public void RegisterModel<TModel>(TModel instance) where TModel : IModel
         {
             mModelList.Add(instance);
             mIOCContainer.Push<TModel>(instance);
         }
 
-        void IArchitecture.RegisterService<TService>(TService instance)
+        public void RegisterService<TService>(TService instance) where TService : IService
         {
             mServiceList.Add(instance);
             mIOCContainer.Push<TService>(instance);
         }
 
-        void IArchitecture.RegisterUtility<TUtility>(TUtility instance)
+        public void RegisterUtility<TUtility>(TUtility instance) where TUtility : IUtility
         {
             mIOCContainer.Push<TUtility>(instance);
         }
 
-        TModel IArchitecture.GetModel<TModel>()
+        public TModel GetModel<TModel>() where TModel : IModel
         {
             return mIOCContainer.Pull<TModel>();
         }
 
-        TService IArchitecture.GetService<TService>()
+        public TService GetService<TService>() where TService : IService
         {
             return mIOCContainer.Pull<TService>();
         }
 
-        TUtility IArchitecture.GetUtility<TUtility>()
+        public TUtility GetUtility<TUtility>() where TUtility : IUtility
         {
             return mIOCContainer.Pull<TUtility>();
         }
 
-        void IArchitecture.SendCommand<TCommand>()
+        public void SendCommand<TCommand>() where TCommand : ICommand, new()
         {
-            TCommand command = this.GetObjInstance<TCommand>();
-            command.Execute();
-            this.PushPool(command);
+            SendCommand<TCommand>(this.GetObjInstance<TCommand>());
         }
 
-        void IArchitecture.SendCommand<TCommand>(TCommand command)
+        public void SendCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
             command.Execute();
             this.PushPool(command);
         }
 
-        Result IArchitecture.DoQuery<TQuery, Result>()
+        public Result DoQuery<TQuery, Result>() where TQuery : IQuery<Result>, new()
         {
-            IQuery<Result> query = this.GetObjInstance<TQuery>();
-            Result result = query.Query();
-            this.PushPool(query);
-            return result;
+            return DoQuery<TQuery, Result>(this.GetObjInstance<TQuery>());
         }
-
-        Result IArchitecture.DoQuery<TQuery, Result>(IQuery<Result> query)
+        public Result DoQuery<TQuery, Result>(IQuery<Result> query) where TQuery : IQuery<Result>
         {
             Result result = query.Query();
             this.PushPool(query);
