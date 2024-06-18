@@ -1,4 +1,12 @@
-﻿#### Architecture【必须】
+﻿#### 个人理解【仅供参考】
+
+Command、Query主要用于多人协作开发，为对方提供接口时使用。在自己的模块内开发，直接获取或者使用事件即可。
+
+若每一个调用或获取都进行Command、Query,随着项目的持续开发，项目会越来越笨重。
+
+简洁且易开发才是项目最基本的
+
+#### Architecture【必须】
 
 项目全局统一设置一个T类，此类继承AbstractArchitecture<T>。此类用于注册Model、Service、Utility
 
