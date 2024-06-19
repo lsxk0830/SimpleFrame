@@ -8,4 +8,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/#Test/Test.unity
     guid: c011bb249bf387342ad3d8d743a37aa3
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 48edd42a574ce504a8a1a952806a2d1f, type: 2}
