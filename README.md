@@ -43,7 +43,7 @@ public class TestArchitecture : AbstractArchitecture<TestArchitecture>
 项目分为四个层级，Controller层、Model层、Service层、Utility层
 Controller层为表现层，Model层+Service层为底层，Utility层为工具层。工具层全局都可以调用【默认实现了层级接口或层级之间沟通接口】。
 
-变现层【Controller层】与底层【Model层+Service层】之间的交互为：
+表现层【Controller层】与底层【Model层+Service层】之间的交互为：
 
 变现层--->底层:使用Command
 
@@ -418,10 +418,63 @@ public class Test : MonoBehaviour, IController
 
 #### Query
 
+必须实现IQuery<T>接口。T为返回值类型
 
+Query方法为具体执行查询代码块，当调用DoQuery时会自动执行Query方法。示例代码如下：
+
+Query方法执行完时会自动放入对象池，下次使用时会从对象池中获取，不需要new。
+
+> 如果TestQuery1中有一些字段，获取TestQuery1对象后需要手动初始化
+
+```C#
+// 查询调用
+public class QueryTest : MonoBehaviour, ICanQuery
+{
+    void Start()
+    {
+        int testInt = this.DoQuery<TestQuery1, int>();
+        string testBind = this.DoQuery<TestQuery2, string>();
+        Debug.Log($"测试Int:{testInt},TestBind:{testBind}");
+    }
+}
+```
 
 ```c#
+// Query脚本示例
+public class TestQuery1 : IQuery<int>
+{
+    public int Query()
+    {
+        return this.GetService<ITestService>().TestInt;
+    }
+}
+public class TestQuery2 : IQuery<string>
+{
+    public string Query()
+    {
+        return TestBind = this.GetService<ITestService>().TestBind.Value;
+    }
+}
+```
 
+```c#
+// 赋值
+public interface ITestService : IService
+{
+    public int TestInt { get; }
+    public BindableProperty<string> TestBind { get; }
+}
+public class TestService : ITestService
+{
+    public int TestInt { get; private set; }
+    public BindableProperty<string> TestBind { get; private set; } = new BindableProperty<string>();
+
+    public void Init()
+    {
+        TestInt = 321;
+        TestBind.Value = "456";
+    }
+}
 ```
 
 

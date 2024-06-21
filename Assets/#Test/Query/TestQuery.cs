@@ -2,11 +2,21 @@ using SimpleFrame;
 
 namespace SimpleFrameTest
 {
-    public class TestQuery : IQuery<int>
+    public class TestQuery1 : IQuery<int>
     {
         public int Query()
         {
-            return 1;
+            int testInt = this.GetService<ITestService>().TestInt;
+            return testInt;
+        }
+    }
+
+    public class TestQuery2 : IQuery<string>
+    {
+        public string Query()
+        {
+            string TestBind = this.GetService<ITestService>().TestBind.Value;
+            return TestBind;
         }
     }
 }
