@@ -10,8 +10,12 @@ namespace SimpleFrameTest
 
         private void Start()
         {
-            this.RegisterEvent<TestClassEvent>(TestClassEventListener); // 事件监听
-            this.RegisterEvent<TestStructEvent>(TestStructEventListener); // 事件监听
+            this.RegisterEvent<TestClassEvent>(TestClassEventListener).UnRegisterEventWithGameObjectDestroy(gameObject); // 事件监听
+            this.RegisterEvent<TestStructEvent>(TestStructEventListener).UnRegisterEventWithGameObjectDestroy(gameObject); // 事件监听
+
+            this.RegisterEvent<TestClassEvent>(TestClassEventListener).UnRegisterEventWithGameObjectDisable(gameObject); // 事件监听
+            this.RegisterEvent<TestStructEvent>(TestStructEventListener).UnRegisterEventWithGameObjectDisable(gameObject); // 事件监听
+
         }
         private void TestClassEventListener(TestClassEvent e)
         {
