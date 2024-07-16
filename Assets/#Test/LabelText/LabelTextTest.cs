@@ -1,3 +1,4 @@
+using SimpleFrame;
 using UnityEngine;
 
 public class LabelTextTest : MonoBehaviour
