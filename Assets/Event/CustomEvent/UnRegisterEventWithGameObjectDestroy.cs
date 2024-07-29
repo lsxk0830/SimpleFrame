@@ -24,9 +24,6 @@ namespace SimpleFrame
             };
         }
 
-        private void OnDestroy()
-        {
-            UnRegisterEvents?.Invoke();
-        }
+        private void OnDestroy() => UnRegisterEvents?.Invoke();
     }
 }

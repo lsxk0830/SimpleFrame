@@ -30,15 +30,8 @@ namespace SimpleFrame
             };
         }
 
-        private void OnEnable()
-        {
-            this.Log($"Action:{RegisterEvents == null}");
-            RegisterEvents?.Invoke();
-        }
+        private void OnEnable() => RegisterEvents?.Invoke();
 
-        private void OnDisable()
-        {
-            UnRegisterEvents?.Invoke();
-        }
+        private void OnDisable() => UnRegisterEvents?.Invoke();
     }
 }
