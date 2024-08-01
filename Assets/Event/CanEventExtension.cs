@@ -45,6 +45,11 @@ namespace SimpleFrame
         /// </summary>
         public static void UnRegisterEventWithGameObjectDisable<T>(this Action<T> self, GameObject go) where T : IEvent, new()
         {
+            if (go == null)
+            {
+                Debug.LogError($"绑定的物体为空");
+                return;
+            }
             if (!go.TryGetComponent(out UnRegisterEventWithGameObjectDisable UnRegisterEventWithGameObjectDisable))
             {
                 UnRegisterEventWithGameObjectDisable = go.AddComponent<UnRegisterEventWithGameObjectDisable>();
@@ -58,6 +63,11 @@ namespace SimpleFrame
         /// </summary>
         public static void UnRegisterEventWithGameObjectDestroy<T>(this Action<T> self, GameObject go) where T : IEvent, new()
         {
+            if (go == null)
+            {
+                Debug.LogError($"绑定的物体为空");
+                return;
+            }
             if (!go.TryGetComponent(out UnRegisterEventWithGameObjectDestroy UnRegisterEventWithGameObjectDestroy))
             {
                 UnRegisterEventWithGameObjectDestroy = go.AddComponent<UnRegisterEventWithGameObjectDestroy>();
