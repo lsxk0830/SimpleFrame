@@ -736,3 +736,152 @@ public class BindablePropertyTest : MonoBehaviour
 
 ```
 
+
+
+#### Inject依赖自动注入
+
+##### 注入方式
+
+###### 父类注入
+
+```C#
+public abstract class AbsatractInject
+{
+    public AbsatractInject()
+    {
+        DIContainer.InjectDependencies(this);
+    }
+}
+public class InjectB : AbsatractInject
+{
+    public void Test()
+    {
+        Debug.Log("B");
+    }
+}
+```
+
+###### 自行注入
+
+```c#
+public class InjectA
+{
+    public InjectA()
+    {
+        DIContainer.InjectDependencies(this);
+    }
+}
+```
+
+##### 使用方式
+
+```c#
+public class InjectA : AbsatractInject
+{
+    [Inject] internal InjectB b;
+    [Inject] private InjectC c { get; set; }
+
+    public void Test()
+    {
+        b.Test();
+        c.Test();
+    }
+}
+```
+
+###### 注意点
+
+ [Inject]特性获取的实例是**新创建的实例**
+
+如果想获取已有的实例，需要先将**实例注册进DIContainer**
+
+使用示例：
+
+```C#
+public class InjectTest : MonoBehaviour
+{
+    void Start()
+    {
+        DIContainer.Register(new InjectB());
+        InjectA injectA = new InjectA();
+        injectA.Test();
+    }
+}
+// 或
+public class InjectTest : MonoBehaviour
+{
+    [Inject] InjectA injectA;
+    void Start()
+    {
+        DIContainer.Register(new InjectB());
+        DIContainer.InjectDependencies(this);
+        injectA.Test();
+    }
+}
+
+
+public class InjectA : AbsatractInject
+{
+    [Inject] internal InjectB b;
+    [Inject] private InjectC c { get; set; }
+
+    public void Test()
+    {
+        b.Test();
+        c.Test();
+    }
+}
+
+public class InjectB
+{
+    public void Test()
+    {
+        Debug.Log("B");
+    }
+}
+```
+
+##### 框架内使用注意点
+
+> 不需要DIContainer.InjectDependencies、DIContainer.Register
+
+###### 示例
+
+```c#
+public interface ITestModel : IModel
+{
+    string GetID(string idStr);
+}
+public class TestModel : ITestModel
+{
+    private float id;
+
+    public void Init()
+    {
+        id = 100000;
+    }
+
+    string ITestModel.GetID(string idStr)
+    {
+        float mTestID = float.Parse(idStr);
+        mTestID += id;
+        return mTestID.ToString();
+    }
+}
+public interface ITestService : IService
+{
+    void TestInject();
+}
+public class TestService : ITestService
+{
+    [Inject] public ITestModel testModel;
+
+    public void Init() { }
+
+    public void TestInject()
+    {
+        this.Log($"注入式ID:{testModel.GetID(351.ToString())}");
+    }
+}
+```
+

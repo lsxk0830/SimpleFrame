@@ -18,13 +18,15 @@ namespace SimpleFrame
             OnInit();
 
             foreach (var model in mModelList)
-            {
                 model.Init();
-            }
             foreach (var service in mServiceList)
-            {
                 service.Init();
-            }
+
+            // 注入
+            foreach (var model in mModelList)
+                DIContainer.InjectDependencies(model);
+            foreach (var service in mServiceList)
+                DIContainer.InjectDependencies(service);
         }
 
         protected abstract void OnInit();
@@ -33,17 +35,20 @@ namespace SimpleFrame
         {
             mModelList.Add(instance);
             mIOCContainer.Push<TModel>(instance);
+            DIContainer.Register(instance);
         }
 
         public void RegisterService<TService>(TService instance) where TService : IService
         {
             mServiceList.Add(instance);
             mIOCContainer.Push<TService>(instance);
+            DIContainer.Register(instance);
         }
 
         public void RegisterUtility<TUtility>(TUtility instance) where TUtility : IUtility
         {
             mIOCContainer.Push<TUtility>(instance);
+            DIContainer.Register(instance);
         }
 
         public TModel GetModel<TModel>() where TModel : IModel
