@@ -2,7 +2,7 @@ namespace SimpleFrame
 {
     public static class CanGetUtilityExtension
     {
-        public static TUtility GetUtility<TUtility>(this ICanGetModel self) where TUtility : IUtility
+        public static TUtility GetUtility<TUtility>(this ICanGetUtility self) where TUtility : IUtility
         {
             return mArchitecture.GetUtility<TUtility>();
         }
