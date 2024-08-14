@@ -5,6 +5,8 @@
 /[Tt]emp/
 /Assets/TextMesh Pro/
 /Assets/TextMesh Pro.meta
+/Assets/AddressableAssetsData
+/Assets/AddressableAssetsData.meta
 
 /.vs
 /.vscode
