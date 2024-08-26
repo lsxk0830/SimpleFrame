@@ -10,6 +10,7 @@
 
 /.vs
 /.vscode
+/.vsconfig
 
 *.sln
 *.csproj
