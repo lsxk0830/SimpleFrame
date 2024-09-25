@@ -3,7 +3,7 @@ using SimpleFrame;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace ItemBase.Scripts.FunctionModule
+namespace SimpleFrame
 {
     public interface IAALoadUtility : IUtility
     {
