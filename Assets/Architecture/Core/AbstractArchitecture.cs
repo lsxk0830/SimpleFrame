@@ -17,16 +17,16 @@ namespace SimpleFrame
 
             OnInit();
 
-            foreach (var model in mModelList)
-                model.Init();
-            foreach (var service in mServiceList)
-                service.Init();
-
             // 注入
             foreach (var model in mModelList)
                 DIContainer.InjectDependencies(model);
             foreach (var service in mServiceList)
                 DIContainer.InjectDependencies(service);
+
+            foreach (var model in mModelList)
+                model.Init();
+            foreach (var service in mServiceList)
+                service.Init();
         }
 
         protected abstract void OnInit();
