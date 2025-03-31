@@ -4,12 +4,7 @@ namespace SimpleFrame
     {
         protected override void OnInit()
         {
-            Utility();
-        }
 
-        private void Utility()
-        {
-            this.RegisterUtility<IAddressablesUtility>(new AddressablesUtility());
         }
     }
 }
