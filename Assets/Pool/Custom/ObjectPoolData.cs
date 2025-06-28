@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace SimpleFrame
@@ -21,6 +20,7 @@ namespace SimpleFrame
         public void PushObj(T obj)
         {
             PoolStack.Push(obj);
+            (obj as IPoolObjReset)?.Reset(); // 支持状态重置
             Debug.Log($"数量:{PoolStack.Count}");
         }
 
@@ -28,7 +28,12 @@ namespace SimpleFrame
         /// 从对象池中获取对象,取栈顶元素
         /// </summary>
         /// <returns></returns>
-        public T GetObj() => PoolStack.Pop();
+        public T GetObj()
+        {
+            T obj = PoolStack.Pop();
+            (obj as IPoolObjInit)?.Init(); // 支持状态重置
+            return obj;
+        }
 
         /// <summary>
         /// 清空此对象的对象池数据

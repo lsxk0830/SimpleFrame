@@ -17,7 +17,7 @@ namespace SimpleFrame
         /// </summary>
         /// <param name="objFullName">放入对象池时对象对应的FullName</param>
         /// <param name="instance">对象实例</param>
-        public void PushPool<T>(T instance)
+        public void PushPool<T>(T instance) where T : IPoolObj
         {
             PushPool<T>(typeof(T).FullName, instance);
         }
@@ -27,7 +27,7 @@ namespace SimpleFrame
         /// </summary>
         /// <param name="objFullName">放入对象池时对象对应的FullName</param>
         /// <param name="instance">对象实例</param>
-        public void PushPool<T>(string objFullName, T instance)
+        public void PushPool<T>(string objFullName, T instance) where T : IPoolObj
         {
             if (instance.InstanceIsNull())
             {
@@ -44,6 +44,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 获取对象
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace SimpleFrame
         /// </summary>
         /// <typeparam name="T">指定类型对象</typeparam>
         /// <returns>指定类型对象</returns>
-        public T GetObjInstance<T>() where T : new()
+        public T GetObjInstance<T>() where T : IPoolObj, new()
         {
             return GetObjInstance<T>(typeof(T).FullName);
         }
@@ -61,15 +62,12 @@ namespace SimpleFrame
         /// </summary>
         /// <typeparam name="T">指定类型对象</typeparam>
         /// <returns>指定类型对象</returns>
-        public T GetObjInstance<T>(string objFullName) where T : new()
+        public T GetObjInstance<T>(string objFullName) where T : IPoolObj, new()
         {
-            T obj = default;
             if (PoolDic.ContainsKey(objFullName) && (PoolDic[objFullName] as ObjectPoolData<T>).PoolStack.Count > 0)
-                obj = (PoolDic[objFullName] as ObjectPoolData<T>).GetObj();
+                return (PoolDic[objFullName] as ObjectPoolData<T>).GetObj();
             else
-                obj = new T();
-
-            return obj;
+                return new T();
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace SimpleFrame
         /// </summary>
         /// <typeparam name="T">指定类型对象</typeparam>
         /// <returns>指定类型对象</returns>
-        public T GetObjInstance<T>(params object[] obj) where T : class
+        public T GetObjInstance<T>(params object[] obj) where T : class, IPoolObj
         {
             return GetObjInstance<T>(typeof(T).FullName, obj);
         }
@@ -87,16 +85,16 @@ namespace SimpleFrame
         /// </summary>
         /// <typeparam name="T">指定类型对象</typeparam>
         /// <returns>指定类型对象</returns>
-        public T GetObjInstance<T>(string objFullName, params object[] objList) where T : class
+        public T GetObjInstance<T>(string objFullName, params object[] objList) where T : class, IPoolObj
         {
-            T obj = default;
             if (PoolDic.ContainsKey(objFullName) && (PoolDic[objFullName] as ObjectPoolData<T>).PoolStack.Count > 0)
-                obj = (PoolDic[objFullName] as ObjectPoolData<T>).GetObj();
+                return (PoolDic[objFullName] as ObjectPoolData<T>).GetObj();
             else
-                obj = Activator.CreateInstance(typeof(T), objList) as T;
-            return obj;
+                return Activator.CreateInstance(typeof(T), objList) as T;
         }
+
         #endregion
+
         #region 清空对象池
 
         /// <summary>
@@ -142,6 +140,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 创建对象池数据
 
         /// <summary>
