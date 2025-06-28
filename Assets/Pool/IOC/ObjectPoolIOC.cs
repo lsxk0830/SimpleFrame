@@ -64,7 +64,7 @@ namespace SimpleFrame
         public T GetObjInstance<T>(string objFullName) where T : new()
         {
             T obj = default;
-            if (PoolDic.ContainsKey(objFullName) && (PoolDic[objFullName] as ObjectPoolData<T>).PoolQueue.Count > 0)
+            if (PoolDic.ContainsKey(objFullName) && (PoolDic[objFullName] as ObjectPoolData<T>).PoolStack.Count > 0)
                 obj = (PoolDic[objFullName] as ObjectPoolData<T>).GetObj();
             else
                 obj = new T();
@@ -90,7 +90,7 @@ namespace SimpleFrame
         public T GetObjInstance<T>(string objFullName, params object[] objList) where T : class
         {
             T obj = default;
-            if (PoolDic.ContainsKey(objFullName) && (PoolDic[objFullName] as ObjectPoolData<T>).PoolQueue.Count > 0)
+            if (PoolDic.ContainsKey(objFullName) && (PoolDic[objFullName] as ObjectPoolData<T>).PoolStack.Count > 0)
                 obj = (PoolDic[objFullName] as ObjectPoolData<T>).GetObj();
             else
                 obj = Activator.CreateInstance(typeof(T), objList) as T;

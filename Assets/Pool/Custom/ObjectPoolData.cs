@@ -12,7 +12,7 @@ namespace SimpleFrame
         /// <summary>
         /// 对象容器
         /// </summary>
-        public HashSet<T> PoolQueue = new HashSet<T>();
+        public Stack<T> PoolStack = new Stack<T>();
 
         /// <summary>
         /// 将对象放进对象池
@@ -20,27 +20,22 @@ namespace SimpleFrame
         /// <param name="obj">具体某个类型的实例</param>
         public void PushObj(T obj)
         {
-            PoolQueue.Add(obj);
-            Debug.Log($"数量:{PoolQueue.Count}");
+            PoolStack.Push(obj);
+            Debug.Log($"数量:{PoolStack.Count}");
         }
 
         /// <summary>
         /// 从对象池中获取对象,取栈顶元素
         /// </summary>
         /// <returns></returns>
-        public T GetObj()
-        {
-            T t = PoolQueue.ElementAt(0);
-            PoolQueue.Remove(t);
-            return t;
-        }
+        public T GetObj() => PoolStack.Pop();
 
         /// <summary>
         /// 清空此对象的对象池数据
         /// </summary>
-        void IPoolData.Clear()
+        public void Clear()
         {
-            PoolQueue.Clear();
+            PoolStack.Clear();
             this.PushPool(this);
         }
     }
