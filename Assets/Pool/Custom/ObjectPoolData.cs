@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace SimpleFrame
 {
@@ -20,6 +21,7 @@ namespace SimpleFrame
         public void PushObj(T obj)
         {
             PoolQueue.Add(obj);
+            Debug.Log($"数量:{PoolQueue.Count}");
         }
 
         /// <summary>

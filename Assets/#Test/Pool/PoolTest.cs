@@ -2,19 +2,27 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using SimpleFrame;
+using System;
 
 namespace SimpleFrameTest
 {
     public class PoolTest : MonoBehaviour
     {
+        [Serializable]
         public class PoolClassTest
         {
             public int ID = 999;
         }
+        [Serializable]
+        public struct PollStructTest
+        {
+            public int ID;
+        }
 
-        private GameObject prefab;
-        private PoolClassTest mPoolClassTest;
-        private List<GameObject> mGoList = new List<GameObject>();
+        public GameObject prefab;
+        public PoolClassTest mPoolClassTest;
+        public PollStructTest mPoolStructTest;
+        public List<GameObject> mGoList = new List<GameObject>();
 
         private void Start()
         {
@@ -56,6 +64,18 @@ namespace SimpleFrameTest
                 mGoList.Add(go);
                 go.name = go.GetInstanceID().ToString();
                 Debug.Log($"获取MonoID_并打印:{go.GetInstanceID()}");
+            }
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                mPoolStructTest = this.GetObjInstance<PollStructTest>(); // 从对象池中获取
+                Debug.Log($"获取普通C#类_并打印:{mPoolStructTest.ID}");
+                mPoolStructTest.ID = 666;
+                this.PushPool(mPoolStructTest);
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                mPoolStructTest = this.GetObjInstance<PollStructTest>(); // 从对象池中获取
+                Debug.Log($"获取普通C#类_并打印:{mPoolStructTest.ID}");
             }
         }
     }
