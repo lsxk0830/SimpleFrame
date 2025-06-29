@@ -12,6 +12,7 @@ namespace SimpleFrame
         private static GameObjectPoolIOC goGlobal = new GameObjectPoolIOC();
 
         #region Object
+
         #region 放入对象
 
         /// <summary>
@@ -35,6 +36,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 获取对象
 
         /// <summary>
@@ -78,6 +80,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 清空对象池
 
         /// <summary>
@@ -116,9 +119,13 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #endregion
+
         #region GameObject
+
         #region 放入对象
+
         /// <summary>
         /// 对象放入对象池
         /// </summary>
@@ -128,6 +135,7 @@ namespace SimpleFrame
             goGlobal.PushGameObject(go);
         }
         #endregion
+
         #region 获取对象
 
         /// <summary>
@@ -142,6 +150,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 清空对象池
 
         /// <summary>

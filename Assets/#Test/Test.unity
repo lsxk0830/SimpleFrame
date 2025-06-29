@@ -280,6 +280,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a38e55b95cfcf124a87a80b37773697f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  MonoTest: {fileID: 7050354063322182419, guid: 71e7b977af406f64f9987f6c3b775846, type: 3}
+  mPoolClassTest:
+    ID: 999
+  mPoolStructTest:
+    ID: 0
+  mGoList: []
 --- !u!4 &715659834
 Transform:
   m_ObjectHideFlags: 0

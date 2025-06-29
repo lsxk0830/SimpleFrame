@@ -20,9 +20,11 @@ namespace SimpleFrameTest
         }
 
         public GameObject prefab;
+        public GameObject MonoTest;
         public PoolClassTest mPoolClassTest;
         public PollStructTest mPoolStructTest;
         public List<GameObject> mGoList = new List<GameObject>();
+        public Queue<GameObject> mGoQueue = new Queue<GameObject>();
 
         private void Start()
         {
@@ -76,6 +78,18 @@ namespace SimpleFrameTest
             {
                 mPoolStructTest = this.GetObjInstance<PollStructTest>(); // 从对象池中获取
                 Debug.Log($"获取普通C#类_并打印:{mPoolStructTest.ID}");
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                mGoQueue.Enqueue(this.GetGameObject(MonoTest)); // 从对象池中获取
+                Debug.Log($"从对象池中获取:{mGoQueue.Count}");
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                this.PushGameObject(mGoQueue.Dequeue()); // 放入对象池
+                Debug.Log($"放入对象池:{mGoQueue.Count}");
             }
         }
     }

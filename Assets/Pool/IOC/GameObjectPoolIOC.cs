@@ -38,9 +38,9 @@ namespace SimpleFrame
                 return;
             }
 
+            go.GetComponent<IPool>()?.Reset();
             go.transform.parent = RootTransform.transform;
             go.SetActive(false);
-
             if (GoID.ContainsKey(go))
             {
                 int id = GoID[go];
@@ -52,6 +52,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 获取对象
 
         /// <summary>
@@ -73,10 +74,12 @@ namespace SimpleFrame
             if (parent == null)
                 SceneManager.MoveGameObjectToScene(go, SceneManager.GetActiveScene());
             MarkAsOut(go, id);
+            go.GetComponent<IPool>()?.Init();
             return go;
         }
 
         #endregion
+
         #region 清空对象池
 
         /// <summary>
@@ -90,6 +93,7 @@ namespace SimpleFrame
         }
 
         #endregion
+
         #region 添加标记、移除标记、根据标记获取对象
 
         /// <summary>
