@@ -571,33 +571,44 @@ public class EventTest : AbstractController
 
 ##### Pool对象池示例
 
-> C#对象从对象池获取时，应该对其进行手动初始化，它的值可能为上个放入对象池的值
+> IPool接口：Init()、Reset()用于放入对象池和从对象池时初始化与重置
 >
 > 物体放入对象池的位置：DontDestroyOnLoad---PoolRoot
 
 ```C#
 this.GetObjInstance<PoolClassTest>(); // 普通C#类从对象池中获取
-this.GetGameObject(prefab); // 物体从对象池中获取
+this.GetGameObject(MonoTest); // 物体从对象池中获取
 
 this.PushPool(mPoolClassTest); // C#对象放入对象池
-this.PushGameObject(mGoList.First()); // 物体放入对象池
+this.PushGameObject(mGoQueue.Dequeue()); // 物体放入对象池
 ```
 
 ```c#
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SimpleFrame;
+using System;
 
 public class PoolTest : MonoBehaviour
 {
+    [Serializable]
     public class PoolClassTest
     {
         public int ID = 999;
     }
+    [Serializable]
+    public struct PollStructTest
+    {
+        public int ID;
+    }
 
-    private GameObject prefab;
-    private PoolClassTest mPoolClassTest;
-    private List<GameObject> mGoList = new List<GameObject>();
+    public GameObject prefab;
+    public GameObject MonoTest;
+    public PoolClassTest mPoolClassTest;
+    public PollStructTest mPoolStructTest;
+    public List<GameObject> mGoList = new List<GameObject>();
+    public Queue<GameObject> mGoQueue = new Queue<GameObject>();
 
     private void Start()
     {
@@ -626,8 +637,7 @@ public class PoolTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             mPoolClassTest = this.GetObjInstance<PoolClassTest>(); // 从对象池中获取
-            // 打印值：666,上一个对象的值，所以从对象池中获取到数据后应该对其初始化
-            Debug.Log($"获取普通C#类_并打印:{mPoolClassTest.ID}"); 
+            Debug.Log($"获取普通C#类_并打印:{mPoolClassTest.ID}"); // 666,上一个对象的值，所以从对象池中获取到数据后应该对其初始化
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -641,7 +651,46 @@ public class PoolTest : MonoBehaviour
             go.name = go.GetInstanceID().ToString();
             Debug.Log($"获取MonoID_并打印:{go.GetInstanceID()}");
         }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            mPoolStructTest = this.GetObjInstance<PollStructTest>(); // 从对象池中获取
+            Debug.Log($"获取普通C#类_并打印:{mPoolStructTest.ID}");
+            mPoolStructTest.ID = 666;
+            this.PushPool(mPoolStructTest);
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            mPoolStructTest = this.GetObjInstance<PollStructTest>(); // 从对象池中获取
+            Debug.Log($"获取普通C#类_并打印:{mPoolStructTest.ID}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            mGoQueue.Enqueue(this.GetGameObject(MonoTest)); // 从对象池中获取
+            Debug.Log($"从对象池中获取:{mGoQueue.Count}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            this.PushGameObject(mGoQueue.Dequeue()); // 放入对象池
+            Debug.Log($"放入对象池:{mGoQueue.Count}");
+        }
     }
+}
+
+public class PoolMonoTest : MonoBehaviour, IPool
+{
+public int ID = 0;
+
+public void Init()
+{
+    ID = 99; // 初始化ID
+}
+
+public void Reset()
+{
+    ID = -1; // 重置ID
+}
 }
 ```
 
@@ -649,16 +698,49 @@ public class PoolTest : MonoBehaviour
 
 ##### Singleton
 
-```
+```c#
+public class Singleton<T> where T : class, new()
+{
+    private Singleton() { }
 
+    private static T instance;
+
+    public static T Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new T();
+            return instance;
+        }
+    }
+}
 ```
 
 
 
 ##### MonoSingleton
 
-```
+```c#
+public class MonoSingleton<T> : AbstractController where T : MonoSingleton<T>
+{
+    private static T instance;
+    public static T Instance => instance;
 
+    protected virtual void OnAwake() { }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this.GetComponent<T>();
+            instance.OnAwake();
+            DontDestroyOnLoad(instance);
+        }
+        else
+            Destroy(gameObject);
+    }
+}
 ```
 
 
@@ -674,7 +756,18 @@ public class PoolTest : MonoBehaviour
 ##### IsNull
 
 ```c#
+public static partial class ToolExtension
+{
+    public static bool IsNull(this GameObject obj)
+    {
+        return ReferenceEquals(obj, null);
+    }
 
+    public static bool InstanceIsNull(this object obj)
+    {
+        return ReferenceEquals(obj, null);
+    }
+}
 ```
 
 
