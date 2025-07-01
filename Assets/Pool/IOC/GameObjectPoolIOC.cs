@@ -37,8 +37,6 @@ namespace SimpleFrame
                 Debug.LogError($"要回收的的物体：{go.name} 为空");
                 return;
             }
-
-            go.GetComponent<IPool>()?.Reset();
             go.transform.parent = RootTransform.transform;
             go.SetActive(false);
             if (GoID.ContainsKey(go))
@@ -70,11 +68,11 @@ namespace SimpleFrame
                 go = GameObject.Instantiate<GameObject>(prefab);
                 go.name = prefab.name + Time.time;
             }
+            go.SetActive(true);
             go.transform.parent = parent;
             if (parent == null)
                 SceneManager.MoveGameObjectToScene(go, SceneManager.GetActiveScene());
             MarkAsOut(go, id);
-            go.GetComponent<IPool>()?.Init();
             return go;
         }
 
@@ -106,7 +104,6 @@ namespace SimpleFrame
             if (Pool.ContainsKey(id) && Pool[id].Count > 0)
             {
                 GameObject go = Pool[id].Dequeue();
-                go.SetActive(true);
                 return go;
             }
             return null;

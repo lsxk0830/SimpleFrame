@@ -82,13 +82,17 @@ namespace SimpleFrameTest
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                mGoQueue.Enqueue(this.GetGameObject(MonoTest)); // 从对象池中获取
+                var go = this.GetGameObject(MonoTest);
+                go.GetComponent<PoolMonoTest>().Init();
+                mGoQueue.Enqueue(go); // 从对象池中获取
                 Debug.Log($"从对象池中获取:{mGoQueue.Count}");
             }
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                this.PushGameObject(mGoQueue.Dequeue()); // 放入对象池
+                var go =mGoQueue.Dequeue();
+                go.GetComponent<PoolMonoTest>().Reset();
+                this.PushGameObject(go); // 放入对象池
                 Debug.Log($"放入对象池:{mGoQueue.Count}");
             }
         }

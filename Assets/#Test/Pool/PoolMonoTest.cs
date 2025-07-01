@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PoolMonoTest : MonoBehaviour, IPool
+public class PoolMonoTest : MonoBehaviour
 {
     public int ID = 0;
 

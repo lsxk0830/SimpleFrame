@@ -20,7 +20,6 @@ namespace SimpleFrame
         public void PushObj(T obj)
         {
             PoolStack.Push(obj);
-            (obj as IPoolObjReset)?.Reset(); // 支持状态重置
             Debug.Log($"数量:{PoolStack.Count}");
         }
 
@@ -31,7 +30,6 @@ namespace SimpleFrame
         public T GetObj()
         {
             T obj = PoolStack.Pop();
-            (obj as IPoolObjInit)?.Init(); // 支持状态重置
             return obj;
         }
 

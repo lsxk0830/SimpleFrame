@@ -571,7 +571,7 @@ public class EventTest : AbstractController
 
 ##### Pool对象池示例
 
-> IPool接口：Init()、Reset()用于放入对象池和从对象池时初始化与重置
+> C#对象从对象池获取时，应该对其进行手动初始化，它的值可能为上个放入对象池的值
 >
 > 物体放入对象池的位置：DontDestroyOnLoad---PoolRoot
 
@@ -584,12 +584,6 @@ this.PushGameObject(mGoQueue.Dequeue()); // 物体放入对象池
 ```
 
 ```c#
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using SimpleFrame;
-using System;
-
 public class PoolTest : MonoBehaviour
 {
     [Serializable]
@@ -666,31 +660,20 @@ public class PoolTest : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            mGoQueue.Enqueue(this.GetGameObject(MonoTest)); // 从对象池中获取
+            var go = this.GetGameObject(MonoTest);
+            go.GetComponent<PoolMonoTest>().Init();
+            mGoQueue.Enqueue(go); // 从对象池中获取
             Debug.Log($"从对象池中获取:{mGoQueue.Count}");
         }
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            this.PushGameObject(mGoQueue.Dequeue()); // 放入对象池
+            var go =mGoQueue.Dequeue();
+            go.GetComponent<PoolMonoTest>().Reset();
+            this.PushGameObject(go); // 放入对象池
             Debug.Log($"放入对象池:{mGoQueue.Count}");
         }
     }
-}
-
-public class PoolMonoTest : MonoBehaviour, IPool
-{
-public int ID = 0;
-
-public void Init()
-{
-    ID = 99; // 初始化ID
-}
-
-public void Reset()
-{
-    ID = -1; // 重置ID
-}
 }
 ```
 
